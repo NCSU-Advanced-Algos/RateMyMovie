@@ -11,3 +11,7 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+
+#Local Files
+*.DS_STORE
+train.csv
