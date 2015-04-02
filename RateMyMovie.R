@@ -25,12 +25,12 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
                    id, "/reviews.json?review_type=all&page_limit=5&page=1&country=us&apikey=", 
                    apiKey, sep="")
   jsonStr=getURLContent(reviewsURL)
-  reviews=fromJSON(jsonStr[1])$reviews$quote
+  reviews=gsub("\"|'","",fromJSON(jsonStr[1])$reviews$quote)
   movieReview=data.frame(name=movieName, id=id, rating=rating, reviews=reviews)
   return(movieReview)
 }
 
-makeTrainSet<-function(moviesFileName="movies.txt", output="train.csv") {
+streamTrainingRows<-function(moviesFileName="movies.txt", output="train.csv") {
   if (file.exists(output)) {
     file.remove(output)
   }
@@ -48,4 +48,21 @@ makeTrainSet<-function(moviesFileName="movies.txt", output="train.csv") {
   }
 }
 
-
+makeTrainSet <- function(trainFile='train.csv'){
+  trains = read.table(file='train.csv',header = TRUE, sep=",")
+  goods = c()
+  bads = c()
+  norms = c()
+  trains$reviews = as.character(trains$reviews)
+  for (i in 1:dim(trains)[1]) {
+    if (trains[i,]$rating == "good") {
+      goods = append(goods, trains[i,4])
+    } else if (trains[i,]$rating == "bad") {
+      bads = append(bads, trains[i,4])
+    } else {
+      norms = append(norms, trains[i,4])
+    }
+  }
+  trainSet = list(good=goods, bad=bads, ave=norms)
+  return(trainSet)
+}
