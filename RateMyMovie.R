@@ -19,7 +19,6 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   movieURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=",
                  movieName,"&page_limit=1&page=1&apikey=", apiKey, sep=""))
   jsonStr=getURLContent(movieURL)
-  print(jsonStr)
   movieObj=fromJSON(jsonStr[1])
   if(length(movieObj$movies) == 0) {
     return(NULL)
@@ -31,6 +30,9 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
                    apiKey, sep="")
   jsonStr=getURLContent(reviewsURL)
   reviews=gsub("\"|'","",fromJSON(jsonStr[1])$reviews$quote)
+  if(length(reviews)==0) {
+    return(NULL)
+  }
   movieReview=data.frame(name=movieName, id=id, rating=rating, reviews=reviews)
   return(movieReview)
 }
@@ -45,6 +47,9 @@ streamTrainingRows<-function(moviesFileName="movies.txt", output="train.csv") {
   doHeader = TRUE
   for (i in 1:length(movies)) {
     reviews = getReviews(movieName=movies[i])
+    if (is.null(reviews)) {
+      next
+    }
     write.table(reviews, file=output, sep=",", col.names=doHeader, row.names=FALSE, append = !doHeader)
     if (doHeader) {
       doHeader = FALSE
