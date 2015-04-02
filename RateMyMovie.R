@@ -1,5 +1,9 @@
 library('RCurl')
 library('jsonlite')
+library('tm')
+library('SnowballC')
+
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 getRating<-function(score){
   if (score>=80) {
@@ -11,10 +15,11 @@ getRating<-function(score){
   }
 }
 
-getReviews<-function(movieName="Dark Knight Rises", apiKey="<RT API KEY") {
+getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7y67x") {
   movieURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=",
                  movieName,"&page_limit=1&page=1&apikey=", apiKey, sep=""))
   jsonStr=getURLContent(movieURL)
+  print(jsonStr)
   movieObj=fromJSON(jsonStr[1])
   if(length(movieObj$movies) == 0) {
     return(NULL)
@@ -63,7 +68,10 @@ makeTrainSet <- function(trainFile='train.csv'){
       norms = append(norms, trains[i,4])
     }
   }
-  trainSet = list(good=goods, bad=bads, ave=norms)
+  gdf = data.frame(words=preprocess(goods),class="good")
+  bdf = data.frame(words=preprocess(bads),class="bad")
+  adf = data.frame(words=preprocess(norms),class="average")
+  trainSet = rbind(gdf, bdf, adf)
   return(trainSet)
 }
 
@@ -72,6 +80,22 @@ preprocess<-function(sents, stpwrds=stopwords('english')){
   corp=tm_map(corp, tolower)
   corp=tm_map(corp, removePunctuation)
   corp=tm_map(corp, removeNumbers)
-  corp=tm_map(corp,removeWords,stpwrds)
-  return(corp)
+  corp=tm_map(corp, removeWords,stpwrds)
+  #corp=tm_map(corp, stemDocument, language="English")
+  dataframe<-data.frame(text=unlist(sapply(corp, '[')), 
+                      stringsAsFactors=F)
+  words=c()
+  dataframe$text = as.character(sapply(dataframe$text, stemWords))
+  for(i in 1:dim(dataframe)[1]) {
+    splits = strsplit(dataframe$text[i],"\\s+")
+    for (s in splits){
+      words = append(words,s)  
+    }
+  }
+  return(words)
+}
+
+stemWords=function(str) {
+  stemmed = trim(stemDocument(str))
+  return(stemmed)
 }
