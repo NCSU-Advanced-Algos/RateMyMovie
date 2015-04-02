@@ -26,7 +26,7 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   rating = getRating(movieObj$movies$ratings$audience_score)
   id = movieObj$movies$id
   reviewsURL=paste("http://api.rottentomatoes.com/api/public/v1.0/movies/",
-                   id, "/reviews.json?review_type=all&page_limit=5&page=1&country=us&apikey=", 
+                   id, "/reviews.json?review_type=all&page_limit=25&page=1&country=us&apikey=", 
                    apiKey, sep="")
   jsonStr=getURLContent(reviewsURL)
   reviews=gsub("\"|'","",fromJSON(jsonStr[1])$reviews$quote)
@@ -92,7 +92,7 @@ preprocess<-function(sents, stpwrds=stopwords('english')){
   words=c()
   dataframe$text = as.character(sapply(dataframe$text, stemWords))
   for(i in 1:dim(dataframe)[1]) {
-    splits = strsplit(dataframe$text[i],"\\s+")
+    splits = strsplit(trim(dataframe$text[i]),"\\s+")
     for (s in splits){
       words = append(words,s)  
     }
@@ -104,3 +104,6 @@ stemWords=function(str) {
   stemmed = trim(stemDocument(str))
   return(stemmed)
 }
+
+streamTrainingRows()
+model = trainNB(makeTrainSet())
