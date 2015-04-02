@@ -11,7 +11,7 @@ getRating<-function(score){
   }
 }
 
-getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7y67x") {
+getReviews<-function(movieName="Dark Knight Rises", apiKey="<RT API KEY") {
   movieURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=",
                  movieName,"&page_limit=1&page=1&apikey=", apiKey, sep=""))
   jsonStr=getURLContent(movieURL)
@@ -65,4 +65,13 @@ makeTrainSet <- function(trainFile='train.csv'){
   }
   trainSet = list(good=goods, bad=bads, ave=norms)
   return(trainSet)
+}
+
+preprocess<-function(sents, stpwrds=stopwords('english')){
+  corp=Corpus(VectorSource(sents))
+  corp=tm_map(corp, tolower)
+  corp=tm_map(corp, removePunctuation)
+  corp=tm_map(corp, removeNumbers)
+  corp=tm_map(corp,removeWords,stpwrds)
+  return(corp)
 }
