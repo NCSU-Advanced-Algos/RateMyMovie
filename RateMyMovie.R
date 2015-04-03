@@ -26,9 +26,10 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   rating = getRating(movieObj$movies$ratings$audience_score)
   id = movieObj$movies$id
   reviewsURL=paste("http://api.rottentomatoes.com/api/public/v1.0/movies/",
-                   id, "/reviews.json?review_type=all&page_limit=25&page=1&country=us&apikey=", 
+                   id, "/reviews.json?review_type=all&page_limit=5&page=1&country=us&apikey=", 
                    apiKey, sep="")
   jsonStr=getURLContent(reviewsURL)
+  print(jsonStr)
   reviews=gsub("\"|'","",fromJSON(jsonStr[1])$reviews$quote)
   if(length(reviews)==0) {
     return(NULL)
@@ -59,7 +60,7 @@ streamTrainingRows<-function(moviesFileName="movies.txt", output="train.csv") {
 }
 
 makeTrainSet <- function(trainFile='train.csv'){
-  trains = read.table(file='train.csv',header = TRUE, sep=",")
+  trains = read.table(file=trainFile,header = TRUE, sep=",")
   goods = c()
   bads = c()
   norms = c()
