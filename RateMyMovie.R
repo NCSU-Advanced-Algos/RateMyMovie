@@ -26,10 +26,9 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   rating = getRating(movieObj$movies$ratings$audience_score)
   id = movieObj$movies$id
   reviewsURL=paste("http://api.rottentomatoes.com/api/public/v1.0/movies/",
-                   id, "/reviews.json?review_type=all&page_limit=5&page=1&country=us&apikey=", 
+                   id, "/reviews.json?review_type=all&page_limit=25&page=1&country=us&apikey=", 
                    apiKey, sep="")
   jsonStr=getURLContent(reviewsURL)
-  print(jsonStr)
   reviews=gsub("\"|'","",fromJSON(jsonStr[1])$reviews$quote)
   if(length(reviews)==0) {
     return(NULL)
@@ -63,21 +62,17 @@ makeTrainSet <- function(trainFile='train.csv'){
   trains = read.table(file=trainFile,header = TRUE, sep=",")
   goods = c()
   bads = c()
-  norms = c()
   trains$reviews = as.character(trains$reviews)
   for (i in 1:dim(trains)[1]) {
     if (trains[i,]$rating == "good") {
       goods = append(goods, trains[i,4])
     } else if (trains[i,]$rating == "bad") {
       bads = append(bads, trains[i,4])
-    } else {
-      norms = append(norms, trains[i,4])
     }
   }
   gdf = data.frame(words=preprocess(goods),class="good")
   bdf = data.frame(words=preprocess(bads),class="bad")
-  adf = data.frame(words=preprocess(norms),class="average")
-  trainSet = rbind(gdf, bdf, adf)
+  trainSet = rbind(gdf, bdf)
   return(trainSet)
 }
 
@@ -106,5 +101,5 @@ stemWords=function(str) {
   return(stemmed)
 }
 
-streamTrainingRows()
-model = trainNB(makeTrainSet())
+#streamTrainingRows()
+#model = trainNB(makeTrainSet())
