@@ -37,7 +37,7 @@ predictMovie <- function(model, movieName, showContingency=FALSE) {
     pred = append(pred, as.character(predictReview(model, review)))
   }
   if (showContingency) {
-    print(table(reviews$rating, pred))  
+    print(table(reviews$rating))  
   }
   tab = table(pred)
   goodCnt = tab[names(tab)=="good"]
@@ -49,6 +49,7 @@ predictMovie <- function(model, movieName, showContingency=FALSE) {
   }
   print(paste(goodCnt,"out of",length(pred),"say the movie is good"))
   print(paste(badCnt,"out of",length(pred),"say the movie is bad"))
+  print(paste("Rotten Tomatoes score of", movieName,"is", reviews[1,]$score,"out of 100"))
 }
 
 index <- function(model, word) {

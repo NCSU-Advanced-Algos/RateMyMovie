@@ -23,7 +23,8 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   if(length(movieObj$movies) == 0) {
     return(NULL)
   }
-  rating = getRating(movieObj$movies$ratings$audience_score)
+  score = movieObj$movies$ratings$audience_score
+  rating = getRating(score)
   id = movieObj$movies$id
   reviewsURL=paste("http://api.rottentomatoes.com/api/public/v1.0/movies/",
                    id, "/reviews.json?review_type=all&page_limit=25&page=1&country=us&apikey=", 
@@ -33,7 +34,7 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7
   if(length(reviews)==0) {
     return(NULL)
   }
-  movieReview=data.frame(name=movieName, id=id, rating=rating, reviews=reviews)
+  movieReview=data.frame(name=movieName, id=id, rating=rating, reviews=reviews,score=score)
   return(movieReview)
 }
 
@@ -65,9 +66,9 @@ makeTrainSet <- function(trainFile='train.csv'){
   trains$reviews = as.character(trains$reviews)
   for (i in 1:dim(trains)[1]) {
     if (trains[i,]$rating == "good") {
-      goods = append(goods, trains[i,4])
+      goods = append(goods, trains[i,]$reviews)
     } else if (trains[i,]$rating == "bad") {
-      bads = append(bads, trains[i,4])
+      bads = append(bads, trains[i,]$reviews)
     }
   }
   gdf = data.frame(words=preprocess(goods),class="good")
