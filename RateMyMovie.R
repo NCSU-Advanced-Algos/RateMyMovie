@@ -4,7 +4,7 @@ library('tm')
 library('SnowballC')
 
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-
+API_KEY="qynq4687htc3z7mq2ec7y67x"
 getRating<-function(score){
   if (score>=80) {
     return("good")
@@ -15,7 +15,7 @@ getRating<-function(score){
   }
 }
 
-getReviews<-function(movieName="Dark Knight Rises", apiKey="qynq4687htc3z7mq2ec7y67x") {
+getReviews<-function(movieName="Dark Knight Rises", apiKey=API_KEY) {
   movieURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=",
                  movieName,"&page_limit=1&page=1&apikey=", apiKey, sep=""))
   jsonStr=getURLContent(movieURL)
@@ -102,5 +102,18 @@ stemWords=function(str) {
   return(stemmed)
 }
 
-#streamTrainingRows()
-#model = trainNB(makeTrainSet())
+streamMovies <- function(model=NULL, predictor=NULL, apiKey=API_KEY, maxPages=5) {
+  pageNum=1
+  while(pageNum <= maxPages) {
+    moviesURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/",
+                                 "movies.json?q=e&page_limit=25&page=",pageNum,
+                                 "&apikey=", apiKey, sep=""))
+    jsonStr=getURLContent(moviesURL)
+    movieObj=fromJSON(jsonStr[1])
+    sapply(movieObj$movies$title, function(movieName){
+      predictor(model, movieName)
+      Sys.sleep(0.5)
+    })
+    pageNum = pageNum + 1
+  }
+}

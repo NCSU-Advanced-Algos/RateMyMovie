@@ -61,7 +61,7 @@ the apriori probability of the class. Whichever class has the greater probabilit
 to that class. If any word has 0 probability we set it as 0.00000001 to avoid the product being 0. We now predict
 the review of 'The Dark Knight' \n\n")
   cat("Running predictMovie(nbModel,'The Dark Knight', showContingency=TRUE)\n")
-  predictMovie(nbModel,'The Dark Knight', showContingency=TRUE)
+  predictMovieNB(nbModel,'The Dark Knight', showContingency=TRUE)
 }
 
 about()

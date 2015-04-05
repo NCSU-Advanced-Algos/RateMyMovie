@@ -30,7 +30,7 @@ predictReview <- function (model, sentence) {
   }
 }
 
-predictMovie <- function(model, movieName, showContingency=FALSE) {
+predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   reviews = getReviews(movieName = movieName)
   pred= c()
   for (review in reviews$reviews) {
@@ -50,6 +50,7 @@ predictMovie <- function(model, movieName, showContingency=FALSE) {
   print(paste(goodCnt,"out of",length(pred),"say the movie is good"))
   print(paste(badCnt,"out of",length(pred),"say the movie is bad"))
   print(paste("Rotten Tomatoes score of", movieName,"is", reviews[1,]$score,"out of 100"))
+  return(rev)
 }
 
 index <- function(model, word) {
