@@ -15,4 +15,5 @@ vignettes/*.pdf
 #Local Files
 *.DS_STORE
 train.csv
+test.csv
 .RData
