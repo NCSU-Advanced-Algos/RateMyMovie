@@ -41,7 +41,13 @@ predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   }
   tab = table(pred)
   goodCnt = tab[names(tab)=="good"]
+  if (length(goodCnt)==0) {
+    goodCnt = 0
+  }
   badCnt = tab[names(tab)=="bad"] 
+  if (length(badCnt)==0) {
+    badCnt = 0
+  }
   if ( goodCnt > badCnt) {
     rev="good"
   } else {
