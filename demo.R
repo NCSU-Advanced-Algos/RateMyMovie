@@ -45,7 +45,7 @@ as the rating of the comment from train.csv.\n\n")
   
   cat("Once the trainset is built we can send it through any classifier to build a model. In the demo we use a naive bayes
 classifier. So in this case our naive bayes classifier internally will have 2 gaussians. One gaussian for all the
-words classified as good and one for all the words classified as good. We use the 'e1071' model to build our 
+words classified as good and one for all the words classified as bad. We use the 'e1071' model to build our 
 classifier in this case. \n\n")
   cat("Running trainNB(trainSet)\n\n")
   nbModel <- trainNB(trainSet)

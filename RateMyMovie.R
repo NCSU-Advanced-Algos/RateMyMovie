@@ -38,7 +38,7 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey=API_KEY) {
   return(movieReview)
 }
 
-streamTrainingRows<-function(moviesFileName="movies.txt", output="train.csv") {
+streamTrainingRows<-function(moviesFileName="testMovies.txt", output="train.csv") {
   if (file.exists(output)) {
     file.remove(output)
   }
