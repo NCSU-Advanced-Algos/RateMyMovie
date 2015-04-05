@@ -32,6 +32,9 @@ predictReview <- function (model, sentence) {
 
 predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   reviews = getReviews(movieName = movieName)
+  if(length(reviews)==0) {
+    return(NULL)
+  }
   pred= c()
   for (review in reviews$reviews) {
     pred = append(pred, as.character(predictReview(model, review)))
