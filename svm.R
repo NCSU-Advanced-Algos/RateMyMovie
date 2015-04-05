@@ -1,0 +1,6 @@
+library('e1071')
+streamTrainingRows("trainMovies.txt", "test.csv")
+trainSet <- makeTrainSet("test.csv")
+model <- svm(class~., data=trainSet)
+pred <- predict(model, trainSet[1])
+table(pred, trainSet[,2])
