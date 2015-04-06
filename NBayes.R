@@ -40,7 +40,7 @@ predictMovieNB <- function(model, movieName, showContingency=FALSE) {
     pred = append(pred, as.character(predictReview(model, review)))
   }
   if (showContingency) {
-    print(table(reviews$rating))  
+    print(table(reviews$rating, pred))  
   }
   tab = table(pred)
   goodCnt = tab[names(tab)=="good"]
@@ -56,10 +56,13 @@ predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   } else {
     rev="bad"    
   }
+  print(paste("****",movieName,"****"))
   print(paste(goodCnt,"out of",length(pred),"say the movie is good"))
   print(paste(badCnt,"out of",length(pred),"say the movie is bad"))
-  print(paste("Rotten Tomatoes score of", movieName,"is", reviews[1,]$score,"out of 100"))
-  return(rev)
+  print(paste("Rotten Tomatoes score of", movieName,"is", reviews[1,]$score,"out of 100","\n"))
+  cat("\n")
+  retFrame = data.frame(act=reviews[1,]$rating, pred=rev)
+  return(retFrame)
 }
 
 index <- function(model, word) {
@@ -71,4 +74,28 @@ index <- function(model, word) {
   } else {
     return(0)
   }
+}
+
+testNB <-function(model, moviesFileName="testMovies.txt") {
+  moviesFile=file(moviesFileName, open = "r")
+  movies = readLines(moviesFile)
+  close(moviesFile)
+  TP=0;TN=0;FP=0;FN=0
+  for (movie in movies) {
+    ret = predictMovieNB(model, movie)
+    Sys.sleep(0.5)
+    if (is.null(ret)) {
+      next
+    }
+    if ((ret$act=="good") && (ret$pred=="good")) {
+      TP = TP + 1
+    } else if ((ret$act=="good") && (ret$pred=="bad")) {
+      FN = FN + 1
+    } else if ((ret$act=="bad") && (ret$pred=="good")) {
+      FP = FP + 1
+    } else {
+      TN = TN + 1
+    }
+  }
+  modelEval(TP, TN, FP, FN)
 }

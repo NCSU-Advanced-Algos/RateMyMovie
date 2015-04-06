@@ -6,10 +6,8 @@ library('SnowballC')
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 API_KEY="qynq4687htc3z7mq2ec7y67x"
 getRating<-function(score){
-  if (score>=80) {
+  if (score>=70) {
     return("good")
-  } else if (score>=60) {
-    return("average")
   } else {
     return("bad")
   }
@@ -116,4 +114,20 @@ streamMovies <- function(model=NULL, predictor=NULL, apiKey=API_KEY, maxPages=5)
     })
     pageNum = pageNum + 1
   }
+}
+
+modelEval<-function(TP,TN,FP,FN){
+  Precision <- TP/(TP + FP)
+  cat("Precision::")
+  print(Precision)
+  Accuracy <- (TP + TN)/(TP + FP + TN + FN)
+  cat("Accuracy::", Accuracy, "\n")
+  Recall <- TP/(TP + FN)
+  cat("Recall::", Recall, "\n")
+  Sensitivity<- TP/(TP + FN)
+  cat("Sensitivity::", Sensitivity, "\n")
+  Specificity <- TN/(TN+FP)
+  cat("Specificity::", Specificity, "\n")
+  F1 <- (2*Precision*Recall)/(Precision+Recall)
+  cat("F1 Measure::", F1)
 }
