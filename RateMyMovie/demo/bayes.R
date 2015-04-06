@@ -62,6 +62,18 @@ to that class. If any word has 0 probability we set it as 0.00000001 to avoid th
 the review of 'The Dark Knight' \n\n")
   cat("Running predictMovie(nbModel,'The Dark Knight', showContingency=TRUE)\n")
   predictMovieNB(nbModel,'The Dark Knight', showContingency=TRUE)
+  
+  ask()
+  cat("\n To predic all movies from a file the following command can be executed. It accepts the model and the file name as
+the arguments. \n\n")
+  cat("Running testNB(nbModel, 'RateMyMovie/R/testMovies.txt')\n")
+  testNB(nbModel, 'RateMyMovie/R/testMovies.txt')
+  
+  ask()
+  cat("\nFor Streaming movies from rotten tomatoes and predicting review on the fly use the following command. It accepts the model and predict function as 
+the arguments. We are not running it as it triggers the stream. Do run it once you build the model.\n\n")
+  
+  cat("streamMovies(modelName, predictMovieNB)")
 }
 
 about()
