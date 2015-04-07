@@ -7,7 +7,7 @@ library('sentiment')
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 getRating<-function(score){
-  if (score>=70) {
+  if (score>=50) {
     return("good")
   }  else {
     return("bad")
@@ -91,7 +91,7 @@ modelEval<-function(TP,TN,FP,FN){
   
 }
  
-lexicalModel<-function(){
+LexicalModel<-function(){
   streamTrainingRows()
   train <- read.csv("train.csv")
   train[4]<-preprocess(train[4])
