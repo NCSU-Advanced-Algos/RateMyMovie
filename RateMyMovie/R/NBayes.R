@@ -1,3 +1,4 @@
+
 library('e1071')
 
 trainNB <- function (words) {
