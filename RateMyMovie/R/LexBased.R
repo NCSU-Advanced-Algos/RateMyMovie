@@ -4,16 +4,6 @@ library('tm')
 library('SnowballC')
 library('sentiment')
 
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
-
-getRating<-function(score){
-  if (score>=60) {
-    return("good")
-  }  else {
-    return("bad")
-  }
-}
-  
   preprocesser<-function(sents, stpwrds=stopwords('english')){
   corp=Corpus(VectorSource(sents))
   corp=tm_map(corp, tolower)
@@ -23,7 +13,7 @@ getRating<-function(score){
   return(dataframe)
 }
 
-predictMovieNB1 <- function(movieName, showContingency=FALSE) {
+predictMovie<- function(movieName, showContingency=FALSE) {
   reviews = getReviews(movieName = movieName)
   if(length(reviews)==0) {
     return(NULL)
@@ -34,8 +24,7 @@ predictMovieNB1 <- function(movieName, showContingency=FALSE) {
   a<-c()
   for(word in prediction$"POS/NEG"){
     word<-as.numeric(as.character(word))
-    ifelse(word > 1, a <- append(a,"good"), a <- append(a,"bad"))
-    
+    ifelse(word > 1, a <- append(a,"good"), a <- append(a,"bad"))   
   }
   
   if (showContingency) {
@@ -70,7 +59,7 @@ LexicalModel <-function(moviesFileName="RateMyMovie/R/testMovies.txt") {
   close(moviesFile)
   TP=0;TN=0;FP=0;FN=0
   for (movie in movies) {
-    ret = predictMovieNB1(movie)
+    ret = predictMovie(movie)
     Sys.sleep(0.5)
     if (is.null(ret)) {
       next
