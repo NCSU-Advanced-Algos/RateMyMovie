@@ -1,6 +1,9 @@
 
 library('e1071')
 
+#Method to train the learner.
+#Input - Set words and their classification
+#Output - Naive Bayes Model
 trainNB <- function (words) {
   model = naiveBayes(words$words, words$class)
   model$attributes = colnames(model$tables[[1]])
@@ -8,6 +11,15 @@ trainNB <- function (words) {
 }
 
 min = 0.00000001
+
+#Method to classify a review as good or bad.
+#Each sentence is first preprocessed and split into words. 
+#Then the probability of each word is estimated and then we
+#compute the probabibilty of the entire sentence
+#Input: 
+#  model - The naive bayes model used to predict the sentence's class
+#  sentence - The review which has to be classified
+#Output - good / bad (classification of the sentence)
 predictReview <- function (model, sentence) {
   words = preprocess(sentence)
   goods = c()
@@ -31,6 +43,12 @@ predictReview <- function (model, sentence) {
   }
 }
 
+
+#Method to predict a movie as good or bad.
+#The method internally predicts each review as good or bad
+#and returns the total good and bad reviews.
+#Input - Set words and their classification
+#Output - Naive Bayes Model
 predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   reviews = getReviews(movieName = movieName)
   if(length(reviews)==0) {
@@ -66,6 +84,14 @@ predictMovieNB <- function(model, movieName, showContingency=FALSE) {
   return(retFrame)
 }
 
+
+#Utility method to find the index of a word
+#in the naive bayes model.
+#Input:
+#  model - Naive Bayes Model
+#  word - the word to be predicted
+#Ouptut:
+#  index of the word in the model
 index <- function(model, word) {
   charWord = as.character(word)
   cols = model$attributes
@@ -77,6 +103,14 @@ index <- function(model, word) {
   }
 }
 
+
+
+#Test a list of movies from a file. Predicts 
+#Input:
+#  model - Naive Bayes Model used to predict
+#  moviesFileName - Path of file which contains the list of movies.
+#Output:
+#  Prints out the statistics for the movies. Like precision, recall, f1 etc
 testNB <-function(model, moviesFileName="RateMyMovie/R/testMovies.txt") {
   moviesFile=file(moviesFileName, open = "r")
   movies = readLines(moviesFile)

@@ -3,8 +3,14 @@ library('jsonlite')
 library('tm')
 library('SnowballC')
 
+
+#Regex to replace existing functions
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+
+#Default API_KEY
 API_KEY="qynq4687htc3z7mq2ec7y67x"
+
+#Classify movie as good or bad based on its tomatometer score
 getRating<-function(score){
   if (score>=70) {
     return("good")
@@ -13,6 +19,14 @@ getRating<-function(score){
   }
 }
 
+#Get reviews for a particular movie from the
+#rotten tomatoes api.
+#Input -
+#  movieName - Name of the movie
+#  apiKey -  API_KEY used to fetch
+#Output -
+#  A data frame object containing the movie name, reviews and scores
+#
 getReviews<-function(movieName="Dark Knight Rises", apiKey=API_KEY) {
   movieURL=gsub(" ","+",paste("http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=",
                               movieName,"&page_limit=1&page=1&apikey=", apiKey, sep=""))
@@ -36,6 +50,12 @@ getReviews<-function(movieName="Dark Knight Rises", apiKey=API_KEY) {
   return(movieReview)
 }
 
+#Stream rotten tomatoes api to fetch reviews for
+#a bunch of movies from a text file and store
+#it into a csv for training.
+#Input:
+#  moviesFileName - Path of the file containing all the movies
+#  output - Path of the csv file in which we write the reviews used for training
 streamTrainingRows<-function(moviesFileName="RateMyMovie/R/trainMovies.txt", output="RateMyMovie/R/train.csv") {
   if (file.exists(output)) {
     file.remove(output)
@@ -57,6 +77,11 @@ streamTrainingRows<-function(moviesFileName="RateMyMovie/R/trainMovies.txt", out
   }
 }
 
+#Make a training set out of all the reviews from a csv file
+#Input: trainFile -  Path of file containing csv file
+#Output: Data frame containing all the words,reviews after
+#      extracting from the csv file and preprocessing
+#
 makeTrainSet <- function(trainFile='RateMyMovie/R/train.csv'){
   trains = read.table(file=trainFile,header = TRUE, sep=",")
   goods = c()
@@ -75,6 +100,21 @@ makeTrainSet <- function(trainFile='RateMyMovie/R/train.csv'){
   return(trainSet)
 }
 
+
+#Preprocessing the review.
+#1) Convert to lower case
+#2) Remove Punctuation
+#3) Remove Numbers
+#4) Remove StopWords
+#5) Split the remaining sentence to words
+#6) We are not performing stemming as we observed
+#that it did not improve the performance, rather
+#worsened it
+#Input: 
+#  sents - List of Sentences to preprocess
+#  stopwords - List of stopwords
+#Output:
+#  List of words after preprocessing
 preprocess<-function(sents, stpwrds=stopwords('english')){
   corp=Corpus(VectorSource(sents))
   corp=tm_map(corp, tolower)
@@ -95,11 +135,19 @@ preprocess<-function(sents, stpwrds=stopwords('english')){
   return(words)
 }
 
+#Method to stem words using porter stemmer
 stemWords=function(str) {
   stemmed = trim(stemDocument(str))
   return(stemmed)
 }
 
+#Continuously stream movies from rotten tomatoes
+#and keeping predicting if it is worth watching
+#Input:
+#  model - model used to predict the movie
+#  predictor - method to predict the movie
+#  apiKey - API KEY used to stream from rotten tomatoes
+#  maxPages - just a check not to run into an infinite loop
 streamMovies <- function(model=NULL, predictor=NULL, apiKey=API_KEY, maxPages=5) {
   pageNum=1
   while(pageNum <= maxPages) {
@@ -116,6 +164,13 @@ streamMovies <- function(model=NULL, predictor=NULL, apiKey=API_KEY, maxPages=5)
   }
 }
 
+
+#Compute Precision, Recall, Accuracy, False Alarm Rate and F1 score
+#Input-
+#  TP : True Positive
+#  FP : False Positive
+#  TN : True Negative
+#  FN : False Negative
 modelEval<-function(TP,TN,FP,FN){
   Precision <- TP/(TP + FP)
   cat("Precision::")
