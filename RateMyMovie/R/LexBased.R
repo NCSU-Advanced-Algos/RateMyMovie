@@ -4,6 +4,14 @@ library('tm')
 library('SnowballC')
 library('sentiment')
 
+
+getRating<-function(score){
+  if (score>=50) {
+    return("good")
+  } else {
+    return("bad")
+  }
+}
 #Preprocessing the Reviews from the stream data.
 preprocesser<-function(sents, stpwrds=stopwords('english')){
   corp=Corpus(VectorSource(sents))
