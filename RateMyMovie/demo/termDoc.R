@@ -59,6 +59,8 @@ trainTermDocumentDemo <- function() {
         from feedback can be collected from output$model.
       Updating our model for future queries.
       Executing *** td = $output$model *** \n")
+  cat("
+      Updated model has ",dim(output$model)[1]," entries\n\n")
   goodReviews = table(output$prediction)["good"]
   badReviews = table(output$prediction)["bad"]
   cat("
