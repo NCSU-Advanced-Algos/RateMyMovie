@@ -18,13 +18,15 @@ ask <- function() {
 demoStream <- function() {  
   cat("A sample list of movies classified as good or bad are stored in 'movies.txt'. This can be edited or a new
 file can be passed as an argument to the method streamTrainingRows(). The streamed comments are stored in 
-'train.csv' which is the default file along with the movie classified as good/bad based on the tomatometer 
-score obtained from the response JSON while streaming from Rotten Tomatoes. We first retrieve the movie id 
-based on the name of the movie. For that movieId we retrieve the top 25 comments and use it as our training
+'train.csv' which is the default file along with the movie classified as good/bad based on the tomato meter 
+score obtained from the response JSON while streaming from Rotten Tomatoes.
+
+We first retrieve the movie id based on the name of the movie. For that movieId we retrieve the top 25 comments and use it as our training
 data with the class variable as the classification of the movie(as per its rating). We cannot retrieve the
 classification of the comment as the API restricts itself to only categorize movies. This is a drawback in
-our data collection technique as our data source is not perfect. This might take around 0.5*number of movies
-seconds as the api restricts to 4 calls per second. Hence we needed to insert a sleep while streaming successive
+our data collection technique as our data source is not perfect. 
+
+This might take around 0.5*number of movies seconds as the api restricts to 4 calls per second. Hence we needed to insert a sleep while streaming successive
 movies.Refer 'http://developer.rottentomatoes.com' for a more detailed information on streaming the movie 
 comments.\n\n")
   cat("Running streamTrainingRows('RateMyMovie/R/movies.txt', 'RateMyMovie/R/train.csv')\n\n")
@@ -33,7 +35,7 @@ comments.\n\n")
 
 predictModel <- function() {
   
-  cat("In the demo we use a bayes classifier using the "sentiment" package analyser. So in this case our bayes classifier internally will have 2 gaussians. One gaussian for all the
+  cat("In the demo we use a bayes classifier using the 'sentiment' package analyser. So in this case our bayes classifier internally will have 2 gaussians. One gaussian for all the
 words classified as good and one for all the words classified as bad. We use the 'sentiment' model to build our 
 classifier in this case. \n\n")
   ask()
