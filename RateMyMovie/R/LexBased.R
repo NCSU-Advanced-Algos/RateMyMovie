@@ -12,6 +12,8 @@ getRating<-function(score){
     return("bad")
   }
 }
+
+
 #Preprocessing the Reviews from the stream data.
 preprocesser<-function(sents, stpwrds=stopwords('english')){
   corp=Corpus(VectorSource(sents))
