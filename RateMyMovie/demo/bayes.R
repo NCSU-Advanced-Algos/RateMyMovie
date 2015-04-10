@@ -8,7 +8,8 @@ about <- function() {
   cat("Kumar Utsav (kutsav)\n")
   cat("Kapil Somani (kmsomani)\n")
   cat("George V Mathew (george2)\n")
-  cat("Desc : <Write Description Here>\n")
+  cat("Desc : Ever confused about if you should watch a movie or not? Well here is your solution. Based on the reviews
+of popular reviewers for a movie, we suggest if a movie is worth ur time. We present to you. \n\t'RateMyMovie' .....\n")
 }
 
 ask <- function() {
