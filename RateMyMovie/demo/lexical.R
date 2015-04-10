@@ -1,5 +1,5 @@
-source('RateMyMovie/R/LexBased.R')
 source('RateMyMovie/R/RateMyMovie.R')
+source('RateMyMovie/R/LexBased.R')
 
 about <- function() {
   cat("***** Rate My Movie *****\n")
