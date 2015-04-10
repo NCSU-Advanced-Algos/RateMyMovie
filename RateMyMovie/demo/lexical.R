@@ -8,7 +8,7 @@ about <- function() {
   cat("Kumar Utsav (kutsav)\n")
   cat("Kapil Somani (kmsomani)\n")
   cat("George V Mathew (george2)\n")
-  cat("Desc : This is a lexical model which depends on the existing dictionary to analyse text and predict whether the review is good or bad.\n")
+  cat("Desc : This is a Lexical model which depends on the existing dictionary to analyse text and predict whether the review is good or bad.\n")
 }
 
 ask <- function() {
